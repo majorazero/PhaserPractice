@@ -54,19 +54,32 @@ function create() {
 	player.animations.add('left',[0,1,2,3],10,true);
 	player.animations.add('right',[5,6,7,8],10,true);
 
+
+	//creates a collectible star
+	stars = game.add.group();
+	stars.enableBody = true;
+
+	for (var i =0; i<12; i++){ //creates 12 stars evenly spaced a apart
+		var star = stars.create(i*70,0,'star');
+		star.body.gravity.y = 6;
+		star.body.bounce.y = 0.7 + Math.random()*0.2; //gives each star a random bounce value
+	}
 }
 
 
 function update() {
 	//allows the player to interact with platforms
 	var hitPlatform = game.physics.arcade.collide(player,platforms);
+	//allows star to interact with platforms
+	game.physics.arcade.collide(stars, platforms);
+	//allows player to collect stars, if player and star overlap, call collectStar function (wrote outside)
+	game.physics.arcade.overlap(player,stars,collectStar,null,this);
 	//checks constantly
 
 	//player control
 	player.body.velocity.x = 0; //default movement if not controlled
 
 	cursors = game.input.keyboard.createCursorKeys(); //keyboard event listener for phasor
-
 	if (cursors.left.isDown){ //cursors is the event listener for phaser for keys
 		player.body.velocity.x = -150; //moves sprite left
 		player.animations.play('left'); //plays assigned left animation
@@ -84,9 +97,14 @@ function update() {
 	if(cursors.up.isDown && player.body.touching.down && hitPlatform){
 		//if up is pressed down, player is touchingthe ground
 		//hitPlatform probably returns true if player actually touching the background
-		player.body.velocity.y =-350; //i guess jumping up is negative coordinates
+		player.body.velocity.y =-300; //i guess jumping up is negative coordinates
 	}
 
+}
+
+function collectStar(player,star){
+	//removes the star
+	star.kill();
 }
 
 </script>

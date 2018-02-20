@@ -17,6 +17,7 @@
 var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 var platforms;
 var player;
+var cursors;
 
 function preload() {
 	game.load.image('sky','assets/sky.png');
@@ -50,8 +51,8 @@ function create() {
 	player.body.gravity.y = 300;
 	player.body.collideWorldBounds = true;
 	//player animaton
-	player.animation.add('left',[0,1,2,3],10,true);
-	player.animation.add('right',[5,6,7,8],10,true);
+	player.animations.add('left',[0,1,2,3],10,true);
+	player.animations.add('right',[5,6,7,8],10,true);
 
 }
 
@@ -59,8 +60,13 @@ function create() {
 function update() {
 	//allows the player to interact with platforms
 	var hitPlatform = game.physics.arcade.collide(player,platforms);
+	//checks constantly
+
 	//player control
 	player.body.velocity.x = 0; //default movement if not controlled
+
+	cursors = game.input.keyboard.createCursorKeys(); //keyboard event listener for phasor
+
 	if (cursors.left.isDown){ //cursors is the event listener for phaser for keys
 		player.body.velocity.x = -150; //moves sprite left
 		player.animations.play('left'); //plays assigned left animation

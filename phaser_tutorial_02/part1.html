@@ -15,6 +15,7 @@
 <script type="text/javascript">
 
 var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+var platforms;
 
 function preload() {
 	game.load.image('sky','assets/sky.png');
@@ -24,8 +25,22 @@ function preload() {
 }
 
 function create() {
-	game.add.sprite(40,250,'star');
+	game.physics.startSystem(Phaser.Physics.ARCADE); //enables physics in the Game
+	game.add.sprite(0,0,'sky'); //adds a background
+	platforms = game.add.group(); //contains ground and 2 ledges
+	platforms.enableBody = true; //give these assets form
+	var ground = platforms.create(0, game.world.height-64,'ground'); //ground creation relative to the map
+	ground.scale.setTo(2,2);//original ground sprite is 400x32 so we scaled it to fit the map
+	ground.body.immovable = true; //won't fall away when you jump on it
+
+	 //creates 2 ledges
+
+	var ledge = platforms.create(400,400,'ground');
+	ledge.body.immovable = true; //self-explanatory
+	ledge = platforms.create(-150,250, 'ground');
+	ledge.body.immovable = true;
 }
+
 
 function update() {
 }
